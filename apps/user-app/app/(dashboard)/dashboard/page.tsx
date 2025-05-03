@@ -8,7 +8,9 @@ import { authOptions } from "../../lib/auth";
 import getBalance from "./getBalance";
 
 import chart from "./chart";
-import 
+import card from './card';
+import greeting from './greeting';
+import transactionCard from './transactionCard';
 
 export default function Dashboard() {
 
