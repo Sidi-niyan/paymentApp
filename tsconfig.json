@@ -4,6 +4,8 @@
     "baseUrl": ".",        // <-- important
     "paths": {
       "@repo/db/*": ["packages/db/*"]
-    }
+    },
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   }
 }

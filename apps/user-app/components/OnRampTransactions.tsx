@@ -6,8 +6,9 @@ export const OnRampTransactions = ({
     transactions: {
         time: Date,
         amount: number,
-        status: string,
-        provider: string
+        status: string,   // This is interface, which is required in ts
+        provider: string,
+        type: 'sent' | 'received'
     }[]
 }) => {
     if (!transactions.length) {
@@ -17,21 +18,21 @@ export const OnRampTransactions = ({
             </div>
         </Card>
     }
-
+    
     return <Card title="Recent Transactions">
         <div className="pt-2">
             {transactions.map(t => (
                 <div key={`${t.time.getTime()}-${t.provider}`} className="flex justify-between">
                     <div>
                         <div className="text-sm">
-                            Received INR
+                            {t.type === 'received' ? 'Received INR' : 'Sent INR'}
                         </div>
                         <div className="text-slate-600 text-xs">
                             {t.time.toDateString()}
                         </div>
                     </div>
-                    <div className="flex flex-col justify-center">
-                        + Rs {t.amount / 100}
+                    <div className={`flex flex-col justify-center ${t.type === 'received' ? 'text-green-600' : 'text-red-600'}`}>
+                        {t.type === 'received' ? '+' : '-'} Rs {t.amount / 100}
                     </div>
                 </div>
             ))}

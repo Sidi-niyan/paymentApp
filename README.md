@@ -1,9 +1,6 @@
 # Setup Instructions
 
-1. **Clone the Repository**
-
-    ```bash
-    git clone https://github.com/sumana10/paytm-wallet.git
+1. Setup
     ```
 
 2. **Install Dependencies**

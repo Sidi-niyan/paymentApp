@@ -1,17 +1,15 @@
 {
-    "extends": "@repo/typescript-config/react-library.json",
-  
-    "compilerOptions": {
-      "module": "NodeNext",
-      "moduleResolution": "NodeNext",
-      "baseUrl": ".",
-      "paths": {
-        "@repo/db": ["."],
-        "@repo/db/*": ["./*"]
-      },
-      "declaration": true,
-      "outDir": "dist"
+  "extends": "@repo/typescript-config/react-library.json",
+
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@repo/db": ["."],
+      "@repo/db/*": ["./*"]
     },
-    "include": ["*.ts", "client/index.ts"],
-    "exclude": ["node_modules", "dist"]
-  }
+    "declaration": true,
+    "outDir": "dist"
+  },
+  "include": ["*.ts", "client/index.ts"],
+  "exclude": ["node_modules", "dist"]
+}
