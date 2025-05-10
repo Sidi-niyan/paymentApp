@@ -4,7 +4,7 @@ import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 
-export async function createOnRampTransaction(provider: string, amount: number) {
+export async function createOnRampTransaction(provider: string, amount: number, message: string) {
     // Ideally the token should come from the banking provider (hdfc/axis)
     const session = await getServerSession(authOptions);
     if (!session?.user || !session?.user?.id) {
@@ -27,6 +27,7 @@ export async function createOnRampTransaction(provider: string, amount: number) 
     });
 
     if (!response.ok) {
+        console.log(response);
         throw new Error('Failed to initiate transaction with bank');
     }
     
@@ -37,7 +38,8 @@ export async function createOnRampTransaction(provider: string, amount: number) 
             startTime: new Date(),
             token: token,
             userId: Number(session?.user?.id),
-            amount: amount * 100
+            amount: amount * 100,
+            message: message
         }
     });
 

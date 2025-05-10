@@ -32,27 +32,33 @@ async function getOnRampTransactions() {
     });
 
     const formattedReceivedTxns = receivedTxns.map(t => ({
+        id: t.id,
         time: t.startTime,
         amount: t.amount,
         status: t.status,
         provider: t.provider,
-        type: 'received' as const
+        type: 'received' as const,
+        message: t.message
     }));
 
     const formattedSentTxns = sentTxns.map(t => ({
+        id: t.id,
         time: t.timestamp,
         amount: t.amount,
         status: 'Success',
         provider: 'P2P Transfer',
-        type: 'sent' as const
+        type: 'sent' as const,
+        message: t.message
     }));
 
     const formattedReceivedP2PTxns = receivedP2PTxns.map(t => ({
+        id: t.id,
         time: t.timestamp,
         amount: t.amount,
         status: 'Success',
         provider: 'P2P Transfer',
-        type: 'received' as const
+        type: 'received' as const,
+        message: t.message
     }));
 
     // Combine all transactions and sort by time
