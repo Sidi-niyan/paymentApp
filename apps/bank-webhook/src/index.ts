@@ -1,12 +1,12 @@
 import express from "express";
-const db = require("@repo/db/client");
+import prisma from "@repo/db/client";
+import cors from "cors";
 const app = express();
 
+app.use(cors());
 app.use(express.json())
 
 app.post("/hdfcWebhook", async (req, res) => {
-   
-    
     const paymentInformation: {
         token: string;
         userId: string;
@@ -17,46 +17,56 @@ app.post("/hdfcWebhook", async (req, res) => {
         amount: req.body.amount
     };
 
-   
-  try {
-    // Log the payment information for debugging purposes
-    console.log('Received payment information:', paymentInformation);
+    try {
+        // Log the payment information for debugging purposes
+        console.log('Received payment information:', paymentInformation);
+        console.log('Request body:', req.body);
 
-    await db.$transaction([
-      db.balance.updateMany({
-        where: {
-          userId: Number(paymentInformation.userId),
-        },
-        data: {
-          amount: {
-            increment: Number(paymentInformation.amount),
-          },
-        },
-      }),
-      db.onRampTransaction.updateMany({
-        where: {
-          token: paymentInformation.token,
-        },
-        data: {
-          status: 'Success',
-        },
-      }),
-    ]);
+        // Verify database connection
+        await prisma.$connect();
 
-    res.json({
-      message: 'Captured',
-    });
-  } catch (e) {
-    // Log the error for debugging purposes
-    console.error('Error while processing webhook:', e);
+        await prisma.$transaction([
+            prisma.balance.updateMany({
+                where: {
+                    userId: Number(paymentInformation.userId),
+                },
+                data: {
+                    amount: {
+                        increment: Number(paymentInformation.amount),
+                    },
+                },
+            }),
+            prisma.onRampTransaction.updateMany({
+                where: {
+                    token: paymentInformation.token,
+                },
+                data: {
+                    status: 'Success',
+                },
+            }),
+        ]);
 
-    res.status(500).json({
-      message: 'Error while processing webhook',
-    });
-  }
+        res.json({
+            message: 'Captured',
+        });
+    } catch (e: any) {
+        // Log the error for debugging purposes
+        console.error('Error while processing webhook:', e);
+        console.error('Error details:', {
+            error: e,
+            stack: e.stack,
+            body: req.body
+        });
 
+        res.status(500).json({
+            message: 'Error while processing webhook',
+            error: e.message
+        });
+    } finally {
+        await prisma.$disconnect();
+    }
+});
 
-
-})
-
-app.listen(3004);
+app.listen(3004, () => {
+    console.log('Webhook server is running on port 3004');
+});
